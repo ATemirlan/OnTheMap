@@ -51,3 +51,9 @@ class Utils: NSObject {
     }
     
 }
+
+extension Double {
+    func toString() -> String {
+        return "\(self)"
+    }
+}

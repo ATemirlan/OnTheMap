@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import SystemConfiguration
+
+private let _documentsDirectoryURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
+private let _fileURL: URL = _documentsDirectoryURL.appendingPathComponent("Students")
 
 class RequestEngine: NSObject {
     
@@ -87,10 +91,10 @@ class RequestEngine: NSObject {
         }
     }
     
-    func postStudentLocation(student: Student, and completion: @escaping (_ posted: Bool, _ error: String?) -> Void) {
+    func postStudentLocation(student: Student, and completion: @escaping(_ posted: Bool, _ error: String?) -> Void ) {
         Utils.showIndicator()
         
-        let body = "{\"uniqueKey\": \"\(uniqueKey ?? "")\", \"firstName\": \"\(student.firstName ?? "")\", \"lastName\": \"\(student.lastName ?? "")\",\"mapString\": \"\(student.mapString ?? "")\", \"mediaURL\": \"\(student.mediaUrl ?? "")\",\"latitude\": \(student.location!.x), \"longitude\": \(student.location!.y)}"
+        let body = "{\"uniqueKey\": \"\(uniqueKey!)\", \"firstName\": \"\(student.firstName!)\", \"lastName\": \"\(student.lastName!)\",\"mapString\": \"\(student.mapString!)\", \"mediaURL\": \"\(student.mediaUrl!)\",\"latitude\": \(student.latitude), \"longitude\": \(student.longitude)}"
         
         dataTask(of: .post, useEscaping: false, with: api.studentLocation, body: body) { (response, error) in
             if let _ = error {
@@ -106,7 +110,7 @@ class RequestEngine: NSObject {
     func updateStudentLocation(student: Student, and completion: @escaping (_ updated: Bool, _ error: String?) -> Void) {
         Utils.showIndicator()
         
-        let body = "{\"uniqueKey\": \"\(uniqueKey ?? "")\", \"firstName\": \"\(student.firstName ?? "")\", \"lastName\": \"\(student.lastName ?? "")\",\"mapString\": \"\(student.mapString ?? "")\", \"mediaURL\": \"\(student.mediaUrl ?? "")\",\"latitude\": \(student.location!.x), \"longitude\": \(student.location!.y)}"
+        let body = "{\"uniqueKey\": \"\(uniqueKey!)\", \"firstName\": \"\(student.firstName!)\", \"lastName\": \"\(student.lastName!)\",\"mapString\": \"\(student.mapString!)\", \"mediaURL\": \"\(student.mediaUrl!)\",\"latitude\": \(student.latitude!), \"longitude\": \(student.longitude!)}"
         
         let url = api.studentLocation + "/" + student.objectId!
         
@@ -120,7 +124,7 @@ class RequestEngine: NSObject {
             Utils.removeIndicator()
         }
     }
-    
+
     func studentLocation(with uniqueKey: Bool, and completion: @escaping(_ result: [Student]?, _ error: String?) -> Void) {
         Utils.showIndicator()
         
@@ -142,7 +146,13 @@ class RequestEngine: NSObject {
                     }
                 }
                 
-                completion(studentList, nil)
+                let holder = StudentsHolder(students: studentList)
+                
+                if holder.saveStudents() {
+                    completion(studentList, nil)
+                } else {
+                    completion(nil, "Oops, error occured")
+                }
             }
             
             Utils.removeIndicator()
@@ -196,10 +206,16 @@ private extension RequestEngine {
     }
     
     func dataTask(of type: MethodType, useEscaping: Bool, with url: String, body: String?, completion: @escaping(_ response: AnyObject?, _ error: String?) -> Void) {
+        
+        guard self.connectedToNetwork() else {
+            completion(nil, "No Internet connection")
+            return
+        }
+        
         let request = createRequest(type: type, url: url, body: body)
         
         let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
-
+            
             guard (error == nil) else {
                 completion(nil, "There was an error with your request")
                 return
@@ -211,6 +227,7 @@ private extension RequestEngine {
             }
 
             guard let code = (response as? HTTPURLResponse)?.statusCode, self.codes.okRange.contains(code) else {
+
                 var textError = "Not a successfull status code"
                 
                 let json = self.getError(from: self.properData(from: data))
@@ -324,4 +341,29 @@ private extension RequestEngine {
         return request
     }
 
+    func connectedToNetwork() -> Bool {
+        
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(nil, $0)
+            }
+        }) else {
+            return false
+        }
+        
+        var flags: SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        
+        return (isReachable && !needsConnection)
+    }
+    
 }

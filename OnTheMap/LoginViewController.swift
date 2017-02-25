@@ -15,10 +15,6 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var emailField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 
     @IBAction func login(_ sender: UIButton) {
         if emailField.text!.characters.count > 0, passwordField.text!.characters.count > 0 {

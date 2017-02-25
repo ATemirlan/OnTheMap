@@ -36,7 +36,7 @@ class TabViewController: UITabBarController {
     
     @IBAction func addLocation(_ sender: Any) {
         if let _ = me {
-            let alert = UIAlertController(title: "", message: "User \"\(me!.title!)\" Has Already Posted a Student Location. Would You Like to Overwrite Their Location?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "", message: "User \"\(me!.firstName + " " + me!.lastName)\" Has Already Posted a Student Location. Would You Like to Overwrite Their Location?", preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { (action) in
                 alert.dismiss(animated: true, completion: nil)
@@ -70,22 +70,13 @@ class TabViewController: UITabBarController {
             } else {
                 if let _ = students {
                     DispatchQueue.main.async {
-                        
                         for student in students! {
                             if let key = student.uniqueKey, key == RequestEngine.shared.uniqueKey {
                                 self.me = student
                             }
                         }
                         
-                        if let mapController = self.viewControllers?[0] as? MapViewController {
-                            mapController.students = students
-                        }
-                        
-                        if let listController = self.viewControllers?[1] as? ListViewController {
-                            listController.students = students
-                        }
-                        
-                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: students)
+                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil)
                     }
                 }
             }

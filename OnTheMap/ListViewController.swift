@@ -18,15 +18,25 @@ class ListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UINib(nibName: "PinTableViewCell", bundle: nil), forCellReuseIdentifier: cellID)
-    
         NotificationCenter.default.addObserver(self, selector: #selector(receiveNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
+        tableView.register(UINib(nibName: "PinTableViewCell", bundle: nil), forCellReuseIdentifier: cellID)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        retrieveData()
     }
     
     func receiveNotification(notification: Notification) {
-        if let students = notification.object as? [Student]? {
-            self.students = students
-            self.tableView.reloadData()
+        retrieveData()
+    }
+    
+    func retrieveData() {
+        if let holder = StudentsHolder.getStudentHolder() {
+            if holder.students.count > 0 {
+                self.students = holder.students
+                tableView.reloadData()
+            }
         }
     }
 
@@ -42,7 +52,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID) as! PinTableViewCell
         
         if let student = students?[indexPath.row] {
-            cell.nameLabel.text = (student.firstName ?? "") + " " + (student.lastName ?? "")
+            cell.nameLabel.text = (student.firstName ?? "[No Name]") + " " + (student.lastName ?? "[No Last Name]")
         }
         
         return cell

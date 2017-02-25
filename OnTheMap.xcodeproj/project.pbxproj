@@ -24,6 +24,9 @@
 		14DF7E5A1E598A4E0005DF14 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14DF7E591E598A4E0005DF14 /* MapKit.framework */; };
 		14DF7E5C1E59A4D70005DF14 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF7E5B1E59A4D70005DF14 /* PostLocationViewController.swift */; };
 		14DF7E5E1E59A7E40005DF14 /* SpecificLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF7E5D1E59A7E40005DF14 /* SpecificLocationViewController.swift */; };
+		14EE4B061E61591800487F19 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EE4B051E61591800487F19 /* Reachability.swift */; };
+		14EE4B181E61810500487F19 /* StudentsHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EE4B171E61810500487F19 /* StudentsHolder.swift */; };
+		14EE4B1A1E61833600487F19 /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EE4B191E61833600487F19 /* StudentLocation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +49,9 @@
 		14DF7E591E598A4E0005DF14 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		14DF7E5B1E59A4D70005DF14 /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
 		14DF7E5D1E59A7E40005DF14 /* SpecificLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecificLocationViewController.swift; sourceTree = "<group>"; };
+		14EE4B051E61591800487F19 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		14EE4B171E61810500487F19 /* StudentsHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentsHolder.swift; sourceTree = "<group>"; };
+		14EE4B191E61833600487F19 /* StudentLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +69,7 @@
 		147125461E506DC900D89008 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				14EE4B051E61591800487F19 /* Reachability.swift */,
 				14D0C10D1E505E5500A1BB3B /* AppDelegate.swift */,
 				14D0C1111E505E5500A1BB3B /* Main.storyboard */,
 				14D0C1141E505E5500A1BB3B /* Assets.xcassets */,
@@ -92,6 +99,8 @@
 				1471254B1E506E6900D89008 /* Constants.swift */,
 				141386AE1E5813130028961A /* Utils.swift */,
 				14CE7FC71E5853CC00C091D0 /* Student.swift */,
+				14EE4B191E61833600487F19 /* StudentLocation.swift */,
+				14EE4B171E61810500487F19 /* StudentsHolder.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -223,15 +232,18 @@
 				141386AF1E5813130028961A /* Utils.swift in Sources */,
 				14DF7E541E596A820005DF14 /* PinTableViewCell.swift in Sources */,
 				14D0C1101E505E5500A1BB3B /* LoginViewController.swift in Sources */,
+				14EE4B1A1E61833600487F19 /* StudentLocation.swift in Sources */,
 				141386B11E5823630028961A /* ListViewController.swift in Sources */,
 				14CE7FC81E5853CC00C091D0 /* Student.swift in Sources */,
 				14D0C10E1E505E5500A1BB3B /* AppDelegate.swift in Sources */,
 				14DF7E571E5979040005DF14 /* TabViewController.swift in Sources */,
+				14EE4B181E61810500487F19 /* StudentsHolder.swift in Sources */,
 				14DF7E5C1E59A4D70005DF14 /* PostLocationViewController.swift in Sources */,
 				147125481E506DDF00D89008 /* RequestEngine.swift in Sources */,
 				14DF7E5E1E59A7E40005DF14 /* SpecificLocationViewController.swift in Sources */,
 				1471254C1E506E6900D89008 /* Constants.swift in Sources */,
 				141386B51E5824AD0028961A /* MapViewController.swift in Sources */,
+				14EE4B061E61591800487F19 /* Reachability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

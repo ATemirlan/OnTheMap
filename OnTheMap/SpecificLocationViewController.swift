@@ -14,15 +14,16 @@ class SpecificLocationViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
 
     var me: Student?
-    var coordinates: CLLocationCoordinate2D?
-    var pointAnnotation: MKPointAnnotation!
-    var pinAnnotationView: MKPinAnnotationView!
+    var location: StudentLocation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let _ = me {
-            mapView.addAnnotation(me!)
+            location = StudentLocation(student: me!)
+            mapView.addAnnotation(location!)
+            let region = MKCoordinateRegionMakeWithDistance(location!.coordinate, 10000, 10000)
+            mapView.setRegion(region, animated: true)
         }
     }
     

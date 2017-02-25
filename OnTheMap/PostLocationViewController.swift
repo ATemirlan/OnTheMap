@@ -42,11 +42,10 @@ class PostLocationViewController: UIViewController {
                     if let _ = coordinates {
                         Utils.removeIndicator()
                         
-                        self.me?.coordinate = coordinates!
-                        self.me?.location = CGPoint(x: coordinates!.latitude, y: coordinates!.longitude)
+                        self.me?.latitude = coordinates!.latitude
+                        self.me?.longitude = coordinates!.longitude
                         self.me?.mapString = self.locationField.text
                         self.me?.mediaUrl = self.websiteField.text
-                        self.me?.subtitle = self.websiteField.text
                         
                         self.performSegue(withIdentifier: self.segue, sender: self.me)
                     } else {
@@ -74,6 +73,7 @@ class PostLocationViewController: UIViewController {
         search.start { (response, error) in
             if error == nil {
                 let coordinates = CLLocationCoordinate2D(latitude: response!.boundingRegion.center.latitude, longitude: response!.boundingRegion.center.longitude)
+                
                 completion(coordinates)
             } else {
                 completion(nil)

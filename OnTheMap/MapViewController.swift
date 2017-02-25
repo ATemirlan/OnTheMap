@@ -12,19 +12,31 @@ import MapKit
 class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
-    var students: [Student]?
+    
+    var pins: [StudentLocation]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(receiveNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
     }
     
     func receiveNotification(notification: Notification) {
-        if let students = notification.object as? [Student]? {
-            self.students = students
-            self.mapView.addAnnotations(students!)
+        updateMap()
+    }
+    
+    func updateMap() {
+        var locations = [StudentLocation]()
+        mapView.addAnnotations(locations)
+        
+        if let holder = StudentsHolder.getStudentHolder() {
+            if holder.students.count > 0 {
+                for student in holder.students {
+                    locations.append(StudentLocation(student: student))
+                }
+            }
         }
+        
+        mapView.addAnnotations(locations)
     }
     
 }
@@ -32,7 +44,7 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let annotation = annotation as? Student {
+        if let annotation = annotation as? StudentLocation {
             var view: MKPinAnnotationView
             
             if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: "pin")

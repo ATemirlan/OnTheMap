@@ -7,23 +7,22 @@
 //
 
 import UIKit
-import MapKit
 
-class Student: NSObject, MKAnnotation {
+class Student: NSObject, NSCoding {
     
     var uniqueKey: String?
     var objectId: String?
-    var firstName: String?
-    var lastName: String?
-    var location: CGPoint?
+    var firstName: String! = "[No Name]"
+    var lastName: String! = "[No LastName]"
     var mapString: String?
     var mediaUrl: String?
     var createdAt: String?
     var updatedAt: String?
+    var latStr: String?
+    var lonStr: String?
     
-    var coordinate: CLLocationCoordinate2D
-    var title: String?
-    var subtitle: String?
+    var latitude: Double?
+    var longitude: Double?
     
     init?(with dictionary: [String : AnyObject]) {
         
@@ -57,22 +56,50 @@ class Student: NSObject, MKAnnotation {
         
         if let mediaUrl = dictionary["mediaURL"] as? String {
             self.mediaUrl = mediaUrl
-            self.subtitle = self.mediaUrl
         }
         
-        if let latitude = dictionary["latitude"] as? CGFloat, let longitude = dictionary["longitude"] as? CGFloat {
-            self.location = CGPoint(x: latitude, y: longitude)
-        } else {
-            self.location = CGPoint(x: 0.0, y: 0.0)
+        if let latitude = dictionary["latitude"] as? Double {
+            self.latitude = latitude
         }
         
-        self.coordinate = CLLocationCoordinate2D(latitude: Double(self.location!.x), longitude: Double(self.location!.y))
-        
-        if let _ = firstName, let _ = lastName {
-            self.title = self.firstName! + " " + self.lastName!
+        if let longitude = dictionary["longitude"] as? Double {
+            self.longitude = longitude
         }
         
         super.init()
     }
    
+    required init?(coder aDecoder: NSCoder) {
+        
+        self.firstName = aDecoder.decodeObject(forKey: "firstName") as? String
+        self.lastName = aDecoder.decodeObject(forKey: "lastName") as? String
+        self.objectId = aDecoder.decodeObject(forKey: "objectId") as? String
+        self.uniqueKey = aDecoder.decodeObject(forKey: "uniqueKey") as? String
+        self.mediaUrl = aDecoder.decodeObject(forKey: "mediaUrl") as? String
+        self.mapString = aDecoder.decodeObject(forKey: "mapString") as? String
+        self.createdAt = aDecoder.decodeObject(forKey: "createdAt") as? String
+        self.updatedAt = aDecoder.decodeObject(forKey: "updatedAt") as? String
+        
+        let latitudeLiteral = aDecoder.decodeObject(forKey: "latitude") as? String
+        let longitudeLiteral = aDecoder.decodeObject(forKey: "longitude") as? String
+        
+        self.latitude = Double(latitudeLiteral ?? "90.0")
+        self.longitude = Double(longitudeLiteral ?? "90.0")
+        
+        super.init()
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(firstName, forKey: "firstName")
+        aCoder.encode(lastName, forKey: "lastName")
+        aCoder.encode(objectId, forKey: "objectId")
+        aCoder.encode(uniqueKey, forKey: "uniqueKey")
+        aCoder.encode(mediaUrl, forKey: "mediaUrl")
+        aCoder.encode(mapString, forKey: "mapString")
+        aCoder.encode(createdAt, forKey: "createdAt")
+        aCoder.encode(updatedAt, forKey: "updatedAt")
+
+        aCoder.encode(latitude?.toString(), forKey: "latitude")
+        aCoder.encode(longitude?.toString(), forKey: "longitude")
+    }
 }
